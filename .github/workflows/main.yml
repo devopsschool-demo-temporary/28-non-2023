@@ -4,10 +4,10 @@ name: Basic GitHub Actions Demo
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
 # 2. Environment variables
