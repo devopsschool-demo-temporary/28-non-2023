@@ -1,0 +1,94 @@
+name: Basic GitHub Actions Demo
+
+# 1. Trigger
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# 2. Environment variables
+env:
+  APP_NAME: "My Demo App"
+  ENVIRONMENT: "development"
+
+# 3. Jobs
+jobs:
+
+  # 4. Job
+  hello:
+    name: Hello Job
+
+    # 5. Runner
+    runs-on: ubuntu-latest
+
+    # 6. Job-level environment variable
+    env:
+      JOB_NAME: "Hello World Job"
+
+    # 7. Steps
+    steps:
+
+      # 8. Checkout code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 9. Simple command
+      - name: Hello World
+        run: echo "Hello GitHub Actions!"
+
+      # 10. Multiple commands
+      - name: Show Information
+        run: |
+          echo "Application: $APP_NAME"
+          echo "Environment: $ENVIRONMENT"
+          echo "Job: $JOB_NAME"
+          echo "GitHub Repository: $GITHUB_REPOSITORY"
+          echo "GitHub Branch: $GITHUB_REF"
+
+      # 11. Create a variable
+      - name: Set Variable
+        run: |
+          echo "VERSION=1.0.0" >> $GITHUB_ENV
+          echo "Variable VERSION created"
+
+      # 12. Use the variable
+      - name: Use Variable
+        run: |
+          echo "Application version is: $VERSION"
+
+      # 13. Conditional step
+      - name: Production Message
+        if: env.ENVIRONMENT == 'production'
+        run: echo "This is a production deployment"
+
+      # 14. Always run
+      - name: Final Message
+        if: always()
+        run: echo "Workflow execution completed"
+
+  # 15. Second job
+  test:
+    name: Test Job
+    runs-on: ubuntu-latest
+
+    # 16. Job dependency
+    needs: hello
+
+    steps:
+
+      - name: Start Testing
+        run: echo "Starting tests..."
+
+      - name: Run Test
+        run: |
+          echo "Running application tests..."
+          echo "Test 1: PASS"
+          echo "Test 2: PASS"
+          echo "Test 3: PASS"
+
+      - name: Test Completed
+        run: echo "All tests completed successfully"
